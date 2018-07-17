@@ -1,0 +1,219 @@
+---
+title: "model withMPA"
+author: "j"
+date: "7/9/2018"
+output: html_document
+---
+
+---
+
+
+
+
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+
+logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 5, m = 0.2){
+
+  # define a vector of time and N THIS IS ODD
+  time <- c(0:nsteps)
+  N <- matrix(0, ncol = n, nrow = length(time))
+  C <- N
+
+  #Assign initial population size
+  
+  N[1,] <- N0
+
+#create pointers
+  
+left_pointer <- c(n, 1:(n-1))
+right_pointer <- c(1:(n-1), n)
+  
+c_mpa <- c(c, c, 0, c, c )
+
+  #start for loop
+
+  
+  for (t in 1:nsteps) {
+    
+    N_in <- m * (N[t, left_pointer] + N[t, right_pointer])/2
+    N_out <- m * N[t,]
+    C[t, ] <- c_mpa * N[t, ]
+    
+    N[t + 1,] <- N[t,] + (r * N[t,] * (1 - (N[t,] / K))) - C[t,] + N_in - N_out
+    
+  }
+  # end for loop
+  #create catch data frame
+
+catch_df <- data.frame(time, C) %>% 
+  gather(parcel, C, -time)
+
+  #create data frame with sim results
+  
+  simul <- data.frame(time, N) %>% 
+    gather(parcel, N, -time) %>% 
+    left_join(catch_df, by = c("time", "parcel")) %>% 
+    mutate(R = p*C,
+           class = ifelse(parcel %in% "X3", "reserve", "fishing"))
+  # to change parcels you need to add them into ifelse like "X2" "X4" etc in addition to changing the c_mpa vector
+  
+  return(simul)
+}
+```
+
+
+
+
+```{r}
+logistic_model() %>% 
+  ggplot(mapping = aes(x = time, y = N, color = class, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+#Logistic population growth in fisheries. 
+
+
+#The equation
+
+$$N_{t + 1} = N_t + rN_t(1 - \frac{N_t}{K}) - cN_t$$ 
+
+
+```{r}
+print(results)
+```
+
+
+
+#The models: C denotes number of catchtes, N denotes population size, and R denotes Revenue.
+
+#What does logistic population growth look like?(little c): 0
+#model becomes more complicated as we account for more ecological variables impacting fisheries
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#Catch proportion: 0.25
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.2, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#catch: 0.5
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+ geom_point(color = "steelblue", size = 1) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+
+#catch 0.9
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = .9, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 1) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#variation in N0
+Does not effect K 
+Recovery or depletion?
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 75, nsteps = 50, c = .5, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+#variation in R
+
+ 
+```{r}
+logistic_model(r = 2, K = 100, N0 = 75, nsteps = 50, c = .25, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#Three variables at once. Is size an issue???
+```{r}
+logistic_model(N0 = 10) %>% 
+  ggplot(aes(x = time, y = N, color = C, size = R)) +
+  geom_point()
+```
+#make tranparent
+#add lines around outline 
+
+
+
+
+
+```{r}
+logistic_model(r = 2, K = 100, N0 = 75, nsteps = 50, c = .25, p = 10) %>% 
+  ggplot(aes(x = time, y = N, color = C, size = R)) +
+  geom_point() + 
+  geom_line()
+```
+
+
+
+
