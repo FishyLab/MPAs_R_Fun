@@ -15,13 +15,19 @@ library(tidyverse)
 
 ```
 
+
+
+#n = number of parcels that are reserves
+
+
+
 ```{r}
 
 logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 5, m = 0.2){
 
   # define a vector of time and N THIS IS ODD
   time <- c(0:nsteps)
-  N <- matrix(0, ncol = n, nrow = length(time))
+  N <- matrix(0, ncol = 100, nrow = length(time))
   C <- N
 
   #Assign initial population size
@@ -30,10 +36,13 @@ logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10
 
 #create pointers
   
-left_pointer <- c(n, 1:(n-1))
-right_pointer <- c(1:(n-1), n)
+left_pointer <- c(100, 1:99)
+right_pointer <- c(1:99, 100)
   
-c_mpa <- c(c, c, 0, c, c )
+c_mpa <- rep(c, 100) 
+c_mpa [1 : n] <- 0
+
+
 
   #start for loop
 
@@ -50,18 +59,22 @@ c_mpa <- c(c, c, 0, c, c )
   # end for loop
   #create catch data frame
 
+C[t+1,] <- c_mpa * N[t+1,]
+
 catch_df <- data.frame(time, C) %>% 
+  magrittr::set_colnames(value = c("time", 1:100)) %>% 
   gather(parcel, C, -time)
 
   #create data frame with sim results
   
   simul <- data.frame(time, N) %>% 
+    magrittr::set_colnames(value = c("time", 1:100)) %>% 
     gather(parcel, N, -time) %>% 
     left_join(catch_df, by = c("time", "parcel")) %>% 
     mutate(R = p*C,
-           class = ifelse(parcel %in% "X3", "reserve", "fishing"))
-  # to change parcels you need to add them into ifelse like "X2" "X4" etc in addition to changing the c_mpa vector
-  
+           zone = ifelse(C == 0, "reserve", "fishing"),
+           parcel = as.numeric(parcel))
+
   return(simul)
 }
 ```
@@ -71,13 +84,395 @@ catch_df <- data.frame(time, C) %>%
 
 ```{r}
 logistic_model() %>% 
-  ggplot(mapping = aes(x = time, y = N, color = class, group = parcel, size = R)) +
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
   geom_line(size = 1) +
   geom_point() +
   theme_bw()
-
 ```
 
+
+
+##normal
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 5, m = 0.2) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##( n = 10)
+## high N0, high m 
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.5) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## high N_0, low m 
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.03) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+## low N_0, high m 
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.5) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+## low N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.03) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+##NOW LOOKING AT n = 50
+
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## high N_0, low m 
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.03) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+## low N_0, high m 
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+## low N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.03) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+
+##NOW LOOKING AT n = 90
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.5) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## high N_0, low m 
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.03) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+## low N_0, high m 
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.5) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+## low N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.03) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, group = parcel, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+
+
+
+
+
+
+##(n = 10)
+
+#high N0 high m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##High N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## low N0 high m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+## low N0 low m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##n = 50 
+
+#high N0 high m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##High N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## low N0 high m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+## low N0 low m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+# n = 90
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##High N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## low N0 high m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+## low N0 low m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+
+
+```{r}
+logistic_model(n = 90) %>% 
+  ggplot(mapping = aes(x = time, y = parcel, fill = N)) +
+  geom_raster()
+```
 
 
 
