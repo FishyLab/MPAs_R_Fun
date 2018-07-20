@@ -83,7 +83,7 @@ zoomin
 #here is the final?
 # what do you think about the third map, is it too zoomed in, should i zoom in the second? would like your opinion.
 
-```{r, fig.width = 10, fig.height = 8}
+```{r, fig.width = 10, fig.height = 10}
 cowplot::plot_grid(Mexico, Baja, zoomin, labels = "AUTO", ncol = 2) 
 
 
