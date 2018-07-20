@@ -2,11 +2,7 @@
 title: "GraphsPrez"
 author: "j"
 date: "7/3/2018"
-output:
-  html_document: 
-          code_folding: hide
-          toc_float: yes
-          toc : yes
+output:html_document: 
 ---
 
 

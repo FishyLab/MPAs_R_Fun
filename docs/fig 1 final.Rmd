@@ -1,10 +1,8 @@
 ---
-title: "figure 1 final"
-author: "j"
-date: "7/16/2018"
+title: "Figure 1"
+date: "`r Sys.Date()`"
 output: html_document
 ---
-
 
 
 ```{r}
