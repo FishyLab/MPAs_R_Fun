@@ -24,24 +24,6 @@ to ensure food access by all people. The ensuing question of whether we can main
 
 #methods 
 
- 
-Coastal ecosystems are an important source of multiple crucial economic and ecosystem services including but not limited to marine ecotourism, high levels of biodiversity, and notably food production. However, these abundant ecosystems are increasingly threatened by overexploitation, coastal development, pollution, and climate change (Halpern et al. 2008). Thus, it is crucial that the biodiversity of these ecosystems is maintained in a way that is both sustainable and pragmatic. In fact, Aichi Biodiversity Target 11 of  United Nations Convention of Biodiversity (CBD) calls for the protection of at least 10 percent of coastal and marine areas, especially areas of particular importance for biodiversity and ecosystem services by 2020. 
-One effective way to preserve marine ecosystems is through the establishment of Marine Protected Areas (MPAs), or areas in which fishing is limited or entirely prohibited. MPAs have been shown to be a highly effective tool of conservation, producing  significant increases in density, biomass, organism size, and species richness of the communities within reserve boundaries (Lester et al. 2009). However, the implementation of MPAs comes with economic ramifications in relation to the output of fisheries. Goal 2 of the United Nations Sustainable Development Goals establishes 2030 as a target year to end of hunger and to ensure food access by all people. The ensuing question of whether we can maintain and even improve biodiversity while simultaneously accelerating food production from fisheries is possible becomes central to the global community. 
-Without effective management, however, both of these crucial goals appear at odds. Unsurprisingly, many countries have been simply rushing to meet their goal of 10% conserved marine area only by stretching the definition of ‘protected’ beyond its breaking point (Sala et al. 2018). It is this apparent conflict that we address with our research, which attempts to pinpoint the “sweet spot” between conservation and economic output. In order to shed light on our query, we seek to create a recommendation geared towards the optimization of fishery management. We approach this problem through a mathematical model of coupled marine protected area - fishery systems. Our approach allows us to model the revenue potential of different MPA placement along the coastline as well as degrees of protection for different MPA parcels. 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
 Methods
 At the core of our simulation is a logistic population growth equation that models the lobster population within symmetrical regions surrounding the coastline of Isla Natividad in Baja Mexico. This discrete growth equation is designed to account for the effects of fishing as well as immigration and emigration of lobsters between parcels wrapped around Isla Natividad (Ovando et al. 2016). The model is given by:	
                               

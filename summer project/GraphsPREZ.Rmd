@@ -1,0 +1,252 @@
+---
+title: "GraphsPrez"
+author: "j"
+date: "7/3/2018"
+output:
+  html_document: 
+          code_folding: hide
+          toc_float: yes
+          toc : yes
+---
+
+
+
+
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+
+logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10){
+
+  # define a vector of time and N THIS IS ODD
+  time <- c(0:nsteps)
+  N <- numeric(length = length(time))
+
+  #Assign initial population size
+  
+  N[1] <- N0
+
+  for (t in 1:nsteps) {
+    N[t + 1] <- N[t] + (r * N[t] * (1 - (N[t] / K))) - c * N[t]
+  }
+  # end for loop
+  
+  #create data frame with sim results
+  
+  simul <- data.frame(time, N) %>% 
+    mutate(C = c * N,
+           R = p*C)
+  
+  
+  return(simul)
+}
+results <- logistic_model()
+```
+
+
+
+
+
+
+```{r}
+
+logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10){
+
+  # define a vector of time and N THIS IS ODD
+  time <- c(0:nsteps)
+  N <- numeric(length = length(time))
+
+  #Assign initial population size
+  
+  N[1] <- N0
+
+  for (t in 1:nsteps) {
+    N[t + 1] <- N[t] + (r * N[t] * (1 - (N[t] / K))) - c * N[t]
+  }
+  # end for loop
+  
+  #create data frame with sim results
+  
+  simul <- data.frame(time, N) %>% 
+    mutate(C = c * N,
+           R = p*C)
+  
+  
+  return(simul)
+}
+
+```
+
+
+
+#Logistic population growth in fisheries. 
+
+
+#The equation
+
+$$N_{t + 1} = N_t + rN_t(1 - \frac{N_t}{K}) - cN_t$$ 
+
+
+```{r}
+print(results)
+```
+
+
+
+#The models: C denotes number of catchtes, N denotes population size, and R denotes Revenue.
+
+#What does logistic population growth look like?(little c): 0
+#model becomes more complicated as we account for more ecological variables impacting fisheries
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#Catch proportion: 0.25
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.2, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#catch: 0.5
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+ geom_point(color = "steelblue", size = 1) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+
+#catch 0.9
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = .9, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 1) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#variation in N0
+Does not effect K 
+Recovery or depletion?
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 75, nsteps = 50, c = .5, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_point(color = "steelblue", size = 2) +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+#variation in R
+
+ 
+```{r}
+logistic_model(r = 2, K = 100, N0 = 75, nsteps = 50, c = .25, p = 10) %>% 
+  gather(variable, value, -time) %>% 
+   ggplot(mapping = aes(x = time, y = value)) +
+ # geom_line() +
+  geom_line() +
+  theme_bw() +
+  facet_wrap( ~ variable, ncol = 2, scales = "free")
+```
+
+
+
+#Three variables at once. Is size an issue???
+```{r}
+logistic_model(N0 = 10) %>% 
+  ggplot(aes(x = time, y = N, color = C, size = R)) +
+  geom_point()
+```
+#make tranparent
+#add lines around outline 
+
+
+
+
+
+```{r}
+logistic_model(r = 2, K = 100, N0 = 75, nsteps = 50, c = .25, p = 10) %>% 
+  ggplot(aes(x = time, y = N, color = C, size = R)) +
+  geom_point() + 
+  geom_line()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

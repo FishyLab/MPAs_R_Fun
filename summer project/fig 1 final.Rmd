@@ -1,0 +1,98 @@
+---
+title: "figure 1 final"
+author: "j"
+date: "7/16/2018"
+output: html_document
+---
+
+
+
+```{r}
+library(tidyverse)
+library(rnaturalearth)
+library(cowplot)
+```
+
+
+#America
+```{r}
+mex <- ne_countries(continent = c("north america", "south america"), scale = "medium", returnclass = "sf")
+ls <- ggplot(data = mex) +
+  geom_sf()
+
+America <- ls
+
+America
+
+```
+
+
+#Mexico
+```{r}
+site <- ne_countries(country = "mexico", returnclass = "sf", scale = "large")
+site
+
+Mexico <- ggplot() +
+  geom_sf(data= site) +
+  geom_point(aes(x = -115.171839, y = 27.871624), shape = 22, size = 10, color = "red") +
+  xlab("latitude") + 
+  ylab("longitude")
+Mexico
+
+```
+
+#regional
+
+```{r}
+Baja <- ggplot() +
+    geom_sf(data = mex) +
+  
+   lims(x = c(-117, -109), y = c(22, 32.5)) + 
+  
+    geom_point(aes(x = -115.171839, y = 27.871624), shape = 22, size = 4, color = "red") +
+  xlab("latitude") + 
+  ylab("longitude")
+
+Baja
+```
+
+
+
+##regional.final
+
+```{r}
+#22 is square 18 is diamond
+regional <- ggplot() +
+    geom_sf(data = mex) +
+  
+  lims(x = c(-116, -114), y = c(27, 29)) +
+   geom_point(aes(x = -115.171839, y = 27.871624), shape = 18, size = 2, 
+   color = "blue")+
+   geom_point(aes(x = -115.171839, y = 27.871624), shape = 22, size = 4) +
+  xlab("latitude") + 
+  ylab("longitude")
+   regional
+```
+
+
+```{r, fig.width = 6, fig.height = 8}
+plot_grid(Mexico, regional, labels = "AUTO", ncol = 1) 
+
+
+
+```
+
+
+
+
+
+
+```{r}
+coast <- sf::read_sf(dsn = "raw_data/spatial", layer = "coastline")
+```
+
+
+
+
+
+

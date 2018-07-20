@@ -22,7 +22,7 @@ output: html_document
 
 #growth model function
 
-$$N_{t + 1} = N_t + rN_t(1 - \frac{N_t}{K}) - cN_t$$  
+$$N_{t + 1} = N_t + rN_t(1 - \frac{N_t}{K}) - cN_t$$        
 
 
 

@@ -6,6 +6,14 @@ output: html_document
 ---
 
 
+
+```{r}
+library(tidyverse)
+library(rnaturalearth)
+library(cowplot)
+```
+
+
 #America
 ```{r}
 mex <- ne_countries(continent = c("north america", "south america"), scale = "medium", returnclass = "sf")
@@ -74,6 +82,14 @@ plot_grid(Mexico, regional, labels = "AUTO", ncol = 1)
 
 ```
 
+
+
+
+
+
+```{r}
+coast <- sf::read_sf(dsn = "raw_data/spatial", layer = "coastline")
+```
 
 
 

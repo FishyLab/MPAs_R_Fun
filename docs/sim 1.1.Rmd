@@ -1,0 +1,315 @@
+---
+title: "sim 1.1"
+author: "j"
+date: "7/19/2018"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+
+```
+
+
+
+
+#TESTS
+
+##(n = 10)
+
+#high N0 high m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##High N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## low N0 high m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+## low N0 low m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 10, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##n = 50 
+
+#high N0 high m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##High N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## low N0 high m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+## low N0 low m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+# n = 90
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 50, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+##High N0 low m
+
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 90, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+## low N0 high m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.5) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+## low N0 low m
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 90, m = 0.03) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+
+
+```{r}
+logistic_model(n = 90) %>% 
+  ggplot(mapping = aes(x = time, y = parcel, fill = N)) +
+  geom_raster()
+```
+
+
+
+
+N = biomass in kilograms
+p = 17.5 $/ton
+R = c x p in $
+c = catches in kilograms
+t = years
+K = 100 kg
+
+
+
+#Final Practical model
+
+```{r}
+logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.7, p = 10, n = 90, m = 0.2) %>% 
+  group_by(time, zone)  %>% 
+  summarise(Ntot = sum(N),
+            N = mean(N),
+            C = sum(C),
+            R = sum(R)) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = zone, size = R)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+```
+
+
+
+
+
+
+
+#RAINBOWS
+
+
+
+
+
+```{r}
+
+results <- matrix(0, ncol = 4, nrow = 900) %>% 
+  magrittr:: set_colnames(value = c( "n", "c", "N", "R")) %>% 
+  as.data.frame()
+
+i = 1
+
+for(n in c(1 : 100)) {
+  
+  for(c in seq(0.1, 0.9, by = 0.1)) {
+    
+    results_i <- logistic_model(n = n, c = c, N0 = 90) %>% 
+      filter(time == 50) %>% 
+      group_by(time) %>% 
+      summarise(N = sum(N), R = sum(R))
+    
+    results$n[i] <- n
+    results$c[i] <- c
+    results$N[i] <- results_i$N
+    results$R[i] <- results_i$R
+    i = i + 1
+  }
+}
+```
+
+
+```{r}
+ggplot(data = results, aes(x = c, y = n, fill = R, z = R ))  +
+  geom_raster(interpolate = T) + 
+  geom_contour(color = "black") +
+  labs(x = "catch rate", y = "reserve size") +
+  scale_fill_viridis_c()
+```
+
+
+```{r}
+ggplot(data = results, aes(x = c, y = n, fill = N, z = N ) ) +
+  geom_raster(interpolate = T) + 
+  geom_contour(color = "black") +
+  labs(x = "catch rate", y = "reserve size") +
+  scale_fill_viridis_c()
+```
+
+#geom_vline
+#geom_hline

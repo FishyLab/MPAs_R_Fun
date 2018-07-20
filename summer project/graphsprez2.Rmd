@@ -1,0 +1,123 @@
+---
+title: "Graphsprez2"
+author: "j"
+date: "7/10/2018"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse) 
+library(cowplot)
+ 
+```
+
+
+
+#This is Equation for 1 cell
+
+
+$$N_{t + 1} = N_{t} + r * N_{t} * (1 - (N_{t} / K)) - C_{t} + N_{in} - N_{out}$$  
+
+
+
+
+
+#work on carrying capacity explanation, all else is good.
+
+
+
+#Code parameters:
+
+#c = movement rate (into your boat)
+#n = how many squares (getting rid)
+#p = price
+#r = growth rate how many make it /
+# what if we had partially protected?: marine protect area(marine reserve)
+#what if i partially protext: 
+#its about the question you are asking
+
+
+```{r}
+
+
+
+
+
+
+logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 5, m = 0.2){
+
+  # define a vector of time and N THIS IS ODD
+  time <- c(0:nsteps)
+  N <- matrix(0, ncol = n, nrow = length(time))
+  C <- N
+
+  #Assign initial population size
+  
+  N[1,] <- N0
+
+#create pointers
+  
+left_pointer <- c(n, 1:(n-1))
+right_pointer <- c(1:(n-1), n)
+  
+c_mpa <- c(c, c, 0, c, c )
+
+  #start for loop
+
+  
+  for (t in 1:nsteps) {
+    
+    N_out <- m * N[t,]
+    N_in <- m * (N_out[left_pointer] + N_out[right_pointer])/2
+    C[t, ] <- c_mpa * N[t, ]
+    
+    N[t + 1,] <- N[t,] + (r * N[t,] * (1 - (N[t,] / K))) - C[t,] + N_in - N_out
+    
+  }
+  # end for loop
+  #create catch data frame
+
+catch_df <- data.frame(time, C) %>% 
+  gather(parcel, C, -time)
+
+  #create data frame with sim results
+  
+  simul <- data.frame(time, N) %>% 
+    gather(parcel, N, -time) %>% 
+    left_join(catch_df, by = c("time", "parcel")) %>% 
+    mutate(R = p*C,
+           class = ifelse(parcel %in% "X3", "reserve", "fishing"))
+  # to change parcels you need to add them into ifelse like "X2" "X4" etc in addition to changing the c_mpa vector
+  
+  return(simul)
+}
+```
+
+
+
+
+```{r}
+model_with_emim <- logistic_model(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 10, n = 5, m = 0.2) %>% 
+  ggplot(mapping = aes(x = time, y = N, color = class, group = parcel, size = R, alpha = 0.5)) +
+  geom_line(size = 1) +
+  geom_point() +
+  theme_bw()
+
+```
+
+
+```{r}
+model_with_emim
+```
+
+
+#This is Equation for 1 cell
+
+
+$$N_{t + 1} = N_{t} + r * N_{t} * (1 - (N_{t} / K)) - C_{t} + N_{in} - N_{out}$$ 
+#work on carrying capacity explanation, all else is good.
+
+
+
+
