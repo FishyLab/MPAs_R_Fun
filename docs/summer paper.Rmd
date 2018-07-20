@@ -1,6 +1,6 @@
 ---
 title: "My summer paper"
-author: ""
+author: "j"
 abstract: "Coastal ecosystems are an important source of multiple crucial economic and ecosystem services. As a result, it is important that the health of these ecosystems is maintained in a way that is both sustainable and pragmatic. One pivotal economic service provided by coastal ecosystems is food production. This important service represents the livelihoods of fisher communities around the globe, who are in turn relied upon by billions of people. Simultaneously, large-scale efforts to conserve coastal biodiversity such as the Convention on Biological Diversity call for increased ocean protection, placing further limits on fishing and threatening to constrain food supply. In light of a need for conservation, balancing the livelihoods of fishers and local economies with effective biodiversity maintenance becomes a central conflict. We address this issue at its source by designing a layout for reserve networks. Specifically, we evaluate a variety of different scenarios including changes in population growth rates, harvesting intensities, initial population sizes, and time scales. Based on these results, we provide comprehensive recommendations for management of fisheries."
 date: "`r Sys.Date()`"
 output:
