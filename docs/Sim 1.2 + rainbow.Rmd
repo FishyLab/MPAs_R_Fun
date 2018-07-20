@@ -22,7 +22,7 @@ library(tidyverse)
 
 ```{r}
 
-logistic_model <- function(r = 1, K = 100, N0 = 10, nsteps = 50, c = 0.5, p = 17500, n = 5, m = 0.2){
+logistic_model <- function(r = 1.0834, K = 100, N0 = 10, nsteps = 50, c = 0.7, p = 17500, n = 5, m = 0.1){
 
   # define a vector of time and N THIS IS ODD
   time <- c(0:nsteps)
@@ -75,8 +75,10 @@ catch_df <- data.frame(time, C) %>%
            parcel = as.numeric(parcel))
 
   return(simul)
+
 }
 ```
+
 
 
 
