@@ -10,6 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+Here is the link to the not raw (readable) HTML file: https://rawgit.com/FishyLab/MPAs_R_Fun/b73494b216bc67881f3438f1bd114b1a9a88b0a2/docs/summer_paper.html
+
+
+
 #abstract
 
 Coastal ecosystems are an important source of multiple crucial economic and ecosystem services. As a result, it is important that the health of these ecosystems is maintained in a way that is both sustainable and pragmatic. One pivotal economic service provided by coastal ecosystems is food production. This important service represents the livelihoods of fisher communities around the globe, who are in turn relied upon by billions of people. Simultaneously, large-scale efforts to conserve coastal biodiversity such as the Convention on Biological Diversity call for increased ocean protection, placing further limits on fishing and threatening to constrain food supply. In light of a need for conservation, balancing the livelihoods of fishers and local economies with effective biodiversity
